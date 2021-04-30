@@ -1,4 +1,4 @@
-# Docker_Lab
+# Containers with Docker
 The objective of this project is to familiarise with container and docker terminology and the basics of docker command-line usage. Here we build our own docker images.
 
 ## Part A
