@@ -1,0 +1,105 @@
+E/16/083
+
+Part (A)
+
+1.Explain what is meant by a docker image and container.
+
+A Docker image is an immutable (unchangeable) file that contains the source code, libraries, dependencies, tools, and other files needed for an application to run.
+
+A container is, ultimately, just a running image. Once we create a container, it adds a writable layer on top of the immutable image allowing us to modify it.Therefore a 'Docker container' can be considered as a virtualized run-time environment where users can isolate applications from the underlying system.
+
+3.Run the following command to verify the nginx image was downloaded. What is the purpose of the ‘TAG’ column?
+
+TAG column contains the corresponding tags to all existing images. Here tags are aliases to the ID of those images and they can be used to convey useful information about a specific image version/variant. 
+
+4.Where is the docker image downloaded from when you execute the command above?
+
+Docker images are stored(for Ubuntu) in /var/lib/docker/overlay2
+
+6.Visit http://localhost:8080 in your browser. What do you observe in the docker console?
+
+Output is in the file named nginx.png
+
+274cb28f5bab4cf21de72a1fadd2f021b56efafa47e51f82d066286099264c12 (It prints the container id)
+
+7.Explain what the -p option in the docker run command in (5) does.
+
+-p is used to publish a container’s port(s) to the host
+
+8.Open a new terminal, run the following command and note down the container name shown in the last column.
+  docker container ps
+
+flamboyant_poitras
+
+10.Verify the container is stopped by looking at the “status” column of the following command. What is the effect of the -a switch to the docker ps command?
+  docker container ps -a
+
+Verification is attached as 'verify_container_stopped.png'
+
+To see both running and stopped containers, -a is used with docker ps command.
+
+11.How do you list the logs of a stopped container?
+
+Using 'docker logs' command
+
+12.How do you restart the nginx container that was stopped in (9)?
+
+Using 'docker restart' command
+Ex: sudo docker restart flamboyant_poitras
+
+13.How do you delete the nginx docker image?
+
+Using 'docker image rm' command
+
+Here since we having a running container, first we should stop it and then remove it. (container id - 32724858ca33) Finally we can delete the nginx docker image. 
+Ex:
+sudo docker stop 32724858ca33
+sudo docker rm 32724858ca33
+sudo docker image rm ae2feff98a0c
+
+14.What happens if you try to delete the image of a running container?
+
+It gives error
+Ex: Error response from daemon: conflict: unable to delete ae2feff98a0c (cannot be forced) - image is being used by running container 32724858ca33
+
+Part (B)
+
+3.‘app2.js’ can be passed two arguments, ‘message’ and ‘colour’ as environment variables. Show how you can set the message and colour variables when running this docker image (without changing the code given.)
+
+sudo docker run -d -p2000:3000 -e message="app2.js" -e colour="blue" viraj/app2
+
+Output is in the file named app2.png
+
+4.‘app3.js’ requires the modules in package.json to be installed. Use the ‘npm’ command to install the necessary modules when building the image. You can set the same environment variables as app2.js to change the message and background colour at run time like ‘app2.js’.
+
+sudo docker run -d -p30:3000 -e message="app3.js" -e colour="red" viraj/app3
+
+Output is in the file named app3.png
+
+5.Write a Dockerfile for ‘app4.js’ installing the required modules. Run the image and upload a file. Verify that the file was uploaded by visiting http://localhost:3000/upload/filename (e.g. http://localhost:3000/upload/photo.jpg.)
+
+Output files:
+file_uploaded.png
+uploaded_image.png (http://localhost:3000/upload/Screenshot_20200419-010208.jpg)
+
+6.Stop the container you ran in (5) and remove the stopped container using the ‘docker container rm’ command. Now start a new container of the ‘app4.js’ image. Try to access the file you uploaded in (5.) Explain the reason why the file is not accessible.
+
+Output is in the file named not_accessible.png
+
+A docker container has its own isolated filesystem. Hence, each uploaded data will be on the corresponding container filesystem and that filesystem is not shared among the other containers.
+
+7.Create a volume to hold uploads using ‘docker volume create’. Now show how ‘app4.js’ can be run with the volume mounted. Verify that the uploaded files are available after the container is removed and a new one is started (with the volume mounted.)
+
+Code:
+code.png
+
+Output files:
+containerA.png
+containerB.png
+
+
+8.Create an account on Docker Hub. Upload the image you created for ‘app4.js’ to Docker Hub and provide a URL to your image.
+
+docker pull viradhanus/app4_sub
+
+https://hub.docker.com/layers/viradhanus/app4_sub/latest/images/sha256-357330043e58546fee9e032e75b76e8717a844fc01ee4ae516e1de95e31e590d?context=explore
